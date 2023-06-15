@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import { CustomerData } from './CustomerData';
+import { Observer } from '../api/Observer';
 
 const ClientTable = () => {
+  const [dataLoaded, setDataLoaded] = useState(false);
   const { data, loading } = useTracker(() => {
     const handle = Meteor.subscribe('customerData');
     const loading = !handle.ready();
@@ -14,6 +16,8 @@ const ClientTable = () => {
       loading,
     };
   });
+
+  const tableRef = useRef(null);
 
   useEffect(() => {
     const observeHandle = CustomerData.find().observeChanges({
@@ -33,12 +37,33 @@ const ClientTable = () => {
     };
   }, []);
 
+  const translatePosition = (positionElement, position) => {
+    console.log('<<translatePosition>>', position);
+    return new Promise((resolve) => {
+      resolve('текст изменен');
+    });
+  };
+
+  const handleMutation = (positionElement, position) => {
+    translatePosition(positionElement, position)
+      .then((translatedPosition) => {
+        positionElement.textContent = translatedPosition;
+      })
+      .catch((error) => {
+        console.error('Translation error:', error);
+      });
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
+  if (!loading) {
+    console.log('loading', tableRef);
+  }
+
   return (
-    <table className="table table-striped">
+    <table className="table table-striped" ref={tableRef}>
       <thead>
         <tr>
           <th>ID</th>
@@ -51,13 +76,13 @@ const ClientTable = () => {
           <tr key={item._id}>
             <td>{item.ID}</td>
             <td>{item['Full name']}</td>
-            <td>{item.Position}</td>
+            <td className="__t">{item.Position}</td>
           </tr>
         ))}
       </tbody>
+      <Observer targetRef={tableRef} onMutation={handleMutation} />
     </table>
   );
 };
 
-export {ClientTable};
-
+export { ClientTable };
