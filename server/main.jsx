@@ -1,7 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { LiveMysql } from 'meteor/vlasky:mysql';
+import { AppDataSource } from "./data-source";
+import { Translation } from './models/Translation';
 
-Meteor.startup(() => {
+Meteor.startup(async () => {
   const liveConnection = new LiveMysql({
     host: '185.143.172.214',
     user: 'meteor_test',
@@ -9,6 +11,13 @@ Meteor.startup(() => {
     database: 'meteor_test',
     serverId: 1,
   });
+
+  try {
+    await AppDataSource.initialize();
+    console.log("Connected to the database!");
+  } catch (error) {
+    console.error("Database connection error:", error);
+  }
 
   Meteor.publish('customerData', function () {
     const self = this;
@@ -40,19 +49,19 @@ Meteor.startup(() => {
     );
 
     handle.on('update', function (diff, data) {
-      
+
       Object.keys(diff.added).forEach(function (id) {
         self.added('customerData', id, diff.added[id]);
       });
-    
+
       Object.keys(diff.changed).forEach(function (id) {
         self.changed('customerData', id, diff.changed[id]);
       });
-    
+
       Object.keys(diff.removed).forEach(function (id) {
         self.removed('customerData', id);
       });
-    
+
       self.ready();
     });
 
@@ -62,4 +71,11 @@ Meteor.startup(() => {
 
     self.ready();
   });
+});
+
+Meteor.methods({
+  async translatePosition(token) {
+    const translation = await Translation.findByName(token);
+    return translation[0].translation;
+  },
 });

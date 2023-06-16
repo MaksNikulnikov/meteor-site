@@ -37,22 +37,36 @@ const ClientTable = () => {
     };
   }, []);
 
-  const translatePosition = (positionElement, position) => {
-    console.log('<<translatePosition>>', position);
-    return new Promise((resolve) => {
-      resolve('текст изменен');
+  // const translatePosition = (positionElement, position) => {
+  //   console.log('<<translatePosition>>', position);
+  //   return new Promise((resolve) => {
+  //     resolve('текст изменен');
+  //   });
+  // };
+
+  // const handleMutation = (positionElement, position) => {
+  //   translatePosition(positionElement, position)
+  //     .then((translatedPosition) => {
+  //       positionElement.textContent = translatedPosition;
+  //     })
+  //     .catch((error) => {
+  //       console.error('Translation error:', error);
+  //     });
+  // };
+
+  const translatePosition = (positionElement, token) => {
+    Meteor.call('translatePosition', token, (error, translation) => {
+      if (error) {
+        console.error('Translation error:', error);
+      } else {
+        positionElement.textContent = translation;
+      }
     });
   };
 
   const handleMutation = (positionElement, position) => {
     translatePosition(positionElement, position)
-      .then((translatedPosition) => {
-        positionElement.textContent = translatedPosition;
-      })
-      .catch((error) => {
-        console.error('Translation error:', error);
-      });
-  };
+  }
 
   if (loading) {
     return <div>Loading...</div>;
