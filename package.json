@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.20.7",
+    "@vlasky/mysql-live-select": "^1.2.26",
     "meteor-node-stubs": "^1.2.5",
     "mysql": "^2.18.1",
     "react": "^18.2.0",
@@ -17,6 +18,7 @@
     "typeorm": "^0.3.16"
   },
   "devDependencies": {
+    "@types/meteor": "^2.9.2",
     "@types/mocha": "^8.2.3",
     "@types/node": "^18.16.18",
     "@types/react": "^18.0.26",
@@ -26,7 +28,7 @@
   "meteor": {
     "mainModule": {
       "client": "client/main.tsx",
-      "server": "server/main.jsx"
+      "server": "server/main.ts"
     },
     "testModule": "tests/main.ts"
   }

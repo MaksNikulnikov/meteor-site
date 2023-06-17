@@ -31,7 +31,7 @@
       /* Pull in type declarations for Meteor packages from either zodern:types or @types/meteor packages */
       "meteor/*": [
         "node_modules/@types/meteor/*",
-        ".meteor/local/types/packages.d.ts"
+        ".meteor/local/types/packages.d.ts",
       ]
     },
     "moduleResolution": "node",
