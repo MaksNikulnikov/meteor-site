@@ -3,28 +3,32 @@ import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import { ClientTable } from './ClientTable';
 
-const App = () => {
+const App: React.FC = () => {
   const subscriptionReady = useTracker(() => {
-    const handle = Meteor.subscribe('customerData');
-    return handle.ready();
+    try {
+      const cursor = Meteor.subscribe('customerData');
+      return cursor.ready();
+    } catch (error) {
+      console.error('Subscription Error:', error);
+      return false;
+    }
   }, []);
 
   useEffect(() => {
     return () => {
-      Meteor.unsubscribe('customerData');
+      Meteor.subscribe('customerData').stop();
     };
   }, []);
 
   if (!subscriptionReady) {
-    return <div>Loading...</div>;
+    return <div className="container">Loading...</div>;
   }
 
   return (
     <div className="container">
-      <h1>Client List</h1>
       <ClientTable />
     </div>
   );
 };
 
-export {App};
+export { App }; 

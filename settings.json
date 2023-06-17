@@ -1,0 +1,18 @@
+{
+  "public": {
+    "publicSetting": "This value is accessible on the client"
+  },
+  "private": {
+    "database": {
+      "type": "mysql",
+      "host": "185.143.172.214",
+      "port": 3306,
+      "username": "meteor_test",
+      "password": "Vnh6s3p1e5EKUoRS3oja",
+      "database": "meteor_test",
+      "synchronize": true,
+      "logging": true
+    },
+    "query": "SELECT customers.id AS ID, CONCAT(customers.fname, ' ', customers.lname) AS 'Full name', positions.name AS Position FROM customers INNER JOIN positions ON customers.position_id = positions.id"
+  }
+}

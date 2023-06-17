@@ -1,14 +1,16 @@
 import { DataSource } from "typeorm";
 import { Translation } from "./models/Translation";
+import { Meteor } from "meteor/meteor";
 
+const dbSettings = Meteor.settings?.private?.database;
 export const AppDataSource = new DataSource({
-    type: 'mysql',
-    host: '185.143.172.214',
-    port: 3306,
-    username: 'meteor_test',
-    password: 'Vnh6s3p1e5EKUoRS3oja',
-    database: 'meteor_test',
-    entities: [Translation],
-    synchronize: true,
-    logging: true,
-})
+  type: dbSettings?.type || "mysql",
+  host: dbSettings?.host || "localhost",
+  port: dbSettings?.port || 3306,
+  username: dbSettings?.username || "your-username",
+  password: dbSettings?.password || "your-password",
+  database: dbSettings?.database || "your-database",
+  entities: [Translation],
+  synchronize: dbSettings?.synchronize || true,
+  logging: dbSettings?.logging || true,
+});
